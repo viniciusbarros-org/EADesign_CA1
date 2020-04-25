@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Service
+metadata:
+  # The unique Service instance/name
+  name: service-g-sync
+spec:
+  # Add external load balancer
+  # *Only supported by some cloud providers*
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 5000
+      targetPort: 5000
+  selector:
+    # Loadbalance traffic across Pods matching
+    # this label selector
+    app: app-g-sync
+---
+apiVersion: v1
+kind: Service
+metadata:
+  # The unique Service instance/name
+  name: app-a-sync
+spec:
+  # Add external load balancer
+  # *Only supported by some cloud providers*
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 5000
+      targetPort: 5000
+  selector:
+    # Loadbalance traffic across Pods matching
+    # this label selector
+    app: app-a-sync
+---
+apiVersion: v1
+kind: Service
+metadata:
+  # The unique Service instance/name
+  name: app-b-sync
+spec:
+  # Add external load balancer
+  # *Only supported by some cloud providers*
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 5000
+      targetPort: 5000
+  selector:
+    # Loadbalance traffic across Pods matching
+    # this label selector
+    app: app-b-sync

@@ -1,0 +1,109 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # deployment name
+  name: deployment-g-sync
+  labels:
+    app: app-g-sync
+spec:
+  # modify replicas according to your case
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: app-g-sync
+  # pod template
+  template:
+    metadata:
+      labels:
+        app: app-g-sync
+        version: "latest"
+    spec:
+      # pod contains 1 container
+      containers:
+      - name: app-g-sync
+        image: viniciusbarros/app-g-sync:1.3
+        resources:
+          requests:  
+            cpu: "128m"
+            memory: "128Mi"
+          limits:    
+            cpu: "500m"   
+            memory: "256Mi" 
+        ports:
+        - containerPort: 5000
+          name: http
+          protocol: TCP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # deployment name
+  name: deployment-a-sync
+  labels:
+    app: app-a-sync
+spec:
+  # modify replicas according to your case
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: app-a-sync
+  # pod template
+  template:
+    metadata:
+      labels:
+        app: app-a-sync
+        version: "latest"
+    spec:
+      # pod contains 1 container
+      containers:
+      - name: app-a-sync
+        image: viniciusbarros/app-a-sync:latest
+        resources:
+          requests:  
+            cpu: "128m"
+            memory: "128Mi"
+          limits:    
+            cpu: "500m"   
+            memory: "256Mi" 
+        ports:
+        - containerPort: 5000
+          name: http
+          protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # deployment name
+  name: deployment-b-sync
+  labels:
+    app: app-b-sync
+spec:
+  # modify replicas according to your case
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: app-b-sync
+  # pod template
+  template:
+    metadata:
+      labels:
+        app: app-b-sync
+        version: "latest"
+    spec:
+      # pod contains 1 container
+      containers:
+      - name: app-b-sync
+        image: viniciusbarros/app-b-sync:latest
+        resources:
+          requests:  
+            cpu: "128m"
+            memory: "128Mi"
+          limits:    
+            cpu: "500m"   
+            memory: "256Mi" 
+        ports:
+        - containerPort: 5000
+          name: http
+          protocol: TCP
+
