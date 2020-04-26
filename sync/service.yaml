@@ -22,9 +22,6 @@ metadata:
   # The unique Service instance/name
   name: app-a-sync
 spec:
-  # Add external load balancer
-  # *Only supported by some cloud providers*
-  type: LoadBalancer
   ports:
     - name: http
       port: 5000
@@ -40,9 +37,6 @@ metadata:
   # The unique Service instance/name
   name: app-b-sync
 spec:
-  # Add external load balancer
-  # *Only supported by some cloud providers*
-  type: LoadBalancer
   ports:
     - name: http
       port: 5000
