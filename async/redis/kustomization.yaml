@@ -1,0 +1,7 @@
+# Initial template got from https://kubernetes.io/docs/tutorials/configuration/configure-redis-using-configmap/
+configMapGenerator:
+- name: example-redis-config
+  files:
+  - redis-config
+resources:
+- redis-pod.yaml
