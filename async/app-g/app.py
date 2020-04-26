@@ -11,10 +11,10 @@ def collect():
     try:
         start = datetime.utcnow()
         pooling_frequency_in_sec = 0.5
-        # redis_host = "redis-service"
-        # redis_port = 6379
-        redis_host = "127.0.0.1"
-        redis_port = 7000
+        redis_host = "redis-service"
+        redis_port = 6379
+        # redis_host = "127.0.0.1"
+        # redis_port = 7000
         channel_a = 'app-a'
         channel_b = 'app-b'
 
@@ -50,8 +50,8 @@ def collect():
                 "finish": finish.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3],
                 "difference": str (finish-start)
             },
-            "A news":str(a['data']),
-            "B News": str(b['data'])
+            "A news":a['data'].decode("utf-8"),
+            "B News": b['data'].decode("utf-8")
         }
     except Exception as e:
         print(e)
