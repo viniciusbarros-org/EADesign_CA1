@@ -10,15 +10,16 @@ app = Flask(__name__)
 def collect():
     try:
         start = datetime.utcnow()
-        pooling_frequency_in_sec = 0.5
+        
         redis_host = "redis-service"
         redis_port = 6379
-        # redis_host = "127.0.0.1"
-        # redis_port = 7000
         channel_a = 'app-a'
         channel_b = 'app-b'
 
         r = redis.Redis(host=redis_host, port=redis_port)
+
+        pooling_frequency_in_sec = get_frequency(r)
+
         pubsub_a = r.pubsub(ignore_subscribe_messages=True)
         pubsub_b = r.pubsub(ignore_subscribe_messages=True)
         pubsub_a.subscribe(channel_a)
@@ -57,6 +58,11 @@ def collect():
         print(e)
         return f"Error when trying to pull info from A or B: {e}", 500
 
+
+def get_frequency(redis):
+    freq = redis.get('app-g-frequency')
+    return int(freq) if freq is not None else 1
+            
 
 
 @app.route('/')

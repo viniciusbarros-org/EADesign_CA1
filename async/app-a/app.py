@@ -8,11 +8,21 @@ class App:
     redis_host = "redis-service"
     redis_port = 6379
     channel = 'app-a'
-    pushing_frequency_in_sec = 5
+    # Frequency defaults to 1 if not set in Redis
+    # Do not set it in here
+    pushing_frequency_in_sec = None 
+    frequency_key = 'app-a-frequency'
 
     def __init__(self):
         self.redis = redis.Redis(host=self.redis_host, port=self.redis_port)
         self.pubsub = self.redis.pubsub
+        freq = self.redis.get(self.frequency_key)
+        
+        if freq is None:
+            self.redis.set(self.frequency_key, 1)
+            freq = self.redis.get(self.frequency_key)
+
+        self.pushing_frequency_in_sec = int(freq)
         
 
     def run(self):
