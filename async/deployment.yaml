@@ -21,7 +21,7 @@ spec:
       # pod contains 1 container
       containers:
       - name: app-g-async
-        image: viniciusbarros/app-g-async:1.5
+        image: viniciusbarros/app-g-async:1.6
         resources:
           requests:  
             cpu: "128m"
@@ -58,7 +58,7 @@ spec:
       # pod contains 1 container
       containers:
       - name: app-a-async
-        image: viniciusbarros/app-a-async:1.5
+        image: viniciusbarros/app-a-async:1.6
         resources:
           requests:  
             cpu: "128m"
@@ -94,7 +94,7 @@ spec:
       # pod contains 1 container
       containers:
       - name: app-b-async
-        image: viniciusbarros/app-b-async:1.5
+        image: viniciusbarros/app-b-async:1.6
         resources:
           requests:  
             cpu: "128m"

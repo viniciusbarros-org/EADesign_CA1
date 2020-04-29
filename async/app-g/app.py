@@ -61,7 +61,7 @@ def collect():
 
 def get_frequency(redis):
     freq = redis.get('app-g-frequency')
-    return int(freq) if freq is not None else 1
+    return float(freq) if freq is not None else 1
             
 
 

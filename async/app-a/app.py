@@ -22,7 +22,7 @@ class App:
             self.redis.set(self.frequency_key, 1)
             freq = self.redis.get(self.frequency_key)
 
-        self.pushing_frequency_in_sec = int(freq)
+        self.pushing_frequency_in_sec = float(freq)
         
 
     def run(self):

@@ -69,7 +69,7 @@ class Tests:
     def save_results(self):
         self.log(f"Saving {len(self.analysis)} results to DB")
         self.db_c.executemany(
-            """INSERT INTO requests (application, status_code, response_time_ms, exec_datetime, async_a_push_freq, async_b_push_freq, async_g_push_freq)
+            """INSERT INTO requests_1vs1 (application, status_code, response_time_ms, exec_datetime, async_a_push_freq, async_b_push_freq, async_g_push_freq)
             VALUES (%s, %s, %s, %s, %s, %s, %s)""",
             self.analysis 
         )
@@ -85,6 +85,8 @@ class Tests:
 
 def handler(request):
     tests = Tests()
+    tests.run('SYNC', 100)
+    tests.run('ASYNC', 100, 0.05, 0.05, 0.05)
     tests.run('SYNC', 100)
     tests.run('ASYNC', 100, 0.05, 0.05, 0.05)
     
