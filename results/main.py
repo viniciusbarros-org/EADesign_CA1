@@ -178,7 +178,7 @@ class Report:
             freq.append(item['async_a_push_freq']*1000)
             response.append(item['average'])
 
-        fig = Figure()
+        fig = Figure() 
         ax = fig.subplots()
         ax.plot(freq, response, label='Publishing Freq')
         ax.plot(freq_g, response_g, label='Polling Freq')
@@ -192,7 +192,43 @@ class Report:
         data = base64.b64encode(buf.getbuffer()).decode("ascii")
         return f"<img src='data:image/png;base64,{data}'/>"
 
-        return(data)
+    def get_report3(self):
+        query = """SELECT application, app_down, recovery_time_ms, downtime
+                    FROM recovery
+                    ORDER BY application, app_down
+                """
+        self.db_c.execute(query)
+        data = self.db_c.fetchall()
+
+        fig = Figure()
+        ax = fig.subplots()
+
+        app = []
+        recovery_time = []
+        downtime = []
+        # Example data
+        for item in data:
+            app.append(item['application']+'-'+item['app_down'])
+            recovery_time.append(item['recovery_time_ms'])
+            ax.text(item['recovery_time_ms'] + 1, len(app)-1 + .25, item['recovery_time_ms'])
+            ax.text(50, len(app)-1, "Caused downtime" if item['downtime'] else '',  color='yellow', fontweight='bold')
+
+        
+        y_pos = np.arange(len(app))
+
+        ax.barh(y_pos, recovery_time)
+        ax.set_yticks(y_pos)
+        ax.set_yticklabels(app)
+        ax.invert_yaxis()  # labels read top-to-bottom
+        ax.set_xlabel('Recovery Time in millisecond (ms)')
+        ax.set_title('Application Recovery time based on component taken down')
+
+
+        buf = BytesIO()
+        fig.set_tight_layout(True)
+        fig.savefig(buf, format="png")
+        data = base64.b64encode(buf.getbuffer()).decode("ascii")
+        return f"<img src='data:image/png;base64,{data}'/>"
 
 
 @app.route("/")
@@ -259,6 +295,25 @@ def report2():
     </html>
     """
 
+
+@app.route("/report3")
+def report3():
+    report = Report()
+
+    plot = report.get_report3()
+    note = "Apps flagged with the yellow text \"Caused downtime\" were inaccessible while the application was being recovered"
+
+    return f"""
+    <html>
+    <body style='text-align:center; background-color:#f1f1f1'>
+    <h1>Report 3 - Application Recovery times</h1>
+    {plot}
+    <p>{note}</p>
+
+    </body>
+    </html>
+    """
+
 def handler(request):
     return index()
 
@@ -267,6 +322,9 @@ def handler1(request):
 
 def handler2(request):
     return report2()
+
+def handler3(request):
+    return report3()
 
 
 if __name__ == '__main__':
