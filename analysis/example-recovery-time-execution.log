@@ -1,0 +1,186 @@
+analysis git:(master) ✗ python3 collect_recovery.py
+--------------------------------------------------------------------------------
+Taking down ASYNC app-a-async and testing its recovery time
+--------------------------------------------------------------------------------
+b'pod "deployment-a-async-fd48d9546-jm8s8" deleted\n'
+ASYNC is returning 200
+End of test downtime of -> 433.20298194885254 ms
+Saving results to DB
+Sleeping for 15 seconds
+--------------------------------------------------------------------------------
+Taking down ASYNC app-b-async and testing its recovery time
+--------------------------------------------------------------------------------
+b'pod "deployment-b-async-697f5d7d7f-drkj5" deleted\n'
+ASYNC is returning 200
+End of test downtime of -> 296.17834091186523 ms
+Saving results to DB
+Sleeping for 15 seconds
+--------------------------------------------------------------------------------
+Taking down ASYNC app-g-async and testing its recovery time
+--------------------------------------------------------------------------------
+b'pod "deployment-g-async-6c9f75498d-f9hf2" deleted\n'
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+ASYNC is returning 200
+End of test downtime of -> 9363.935947418213 ms
+Saving results to DB
+Sleeping for 15 seconds
+--------------------------------------------------------------------------------
+Taking down SYNC app-a-sync and testing its recovery time
+--------------------------------------------------------------------------------
+b'pod "deployment-a-sync-7d5b8b4dbc-bfltt" deleted\n'
+SYNC is returning 500
+SYNC is returning 500
+SYNC is returning 200
+End of test downtime of -> 3760.477304458618 ms
+Saving results to DB
+Sleeping for 15 seconds
+--------------------------------------------------------------------------------
+Taking down SYNC app-b-sync and testing its recovery time
+--------------------------------------------------------------------------------
+b'pod "deployment-b-sync-54d76456fb-t45kd" deleted\n'
+➜  analysis git:(master) ✗ python3 collect_recovery.py
+--------------------------------------------------------------------------------
+Taking down ASYNC app-a-async and testing its recovery time
+--------------------------------------------------------------------------------
+b'pod "deployment-a-async-fd48d9546-grqhr" deleted\n'
+ASYNC is returning 200
+End of test downtime of -> 189.62597846984863 ms
+Saving results to DB
+Sleeping for 15 seconds
+--------------------------------------------------------------------------------
+Taking down ASYNC app-b-async and testing its recovery time
+--------------------------------------------------------------------------------
+b'pod "deployment-b-async-697f5d7d7f-8tqk2" deleted\n'
+ASYNC is returning 200
+End of test downtime of -> 404.8030376434326 ms
+Saving results to DB
+Sleeping for 15 seconds
+--------------------------------------------------------------------------------
+Taking down ASYNC app-g-async and testing its recovery time
+--------------------------------------------------------------------------------
+b'pod "deployment-g-async-6c9f75498d-bxw2b" deleted\n'
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+ASYNC is returning 200
+End of test downtime of -> 9714.796781539917 ms
+Saving results to DB
+Sleeping for 15 seconds
+--------------------------------------------------------------------------------
+Taking down SYNC app-a-sync and testing its recovery time
+--------------------------------------------------------------------------------
+b'pod "deployment-a-sync-7d5b8b4dbc-q4jh5" deleted\n'
+SYNC is returning 500
+SYNC is returning 500
+SYNC is returning 500
+SYNC is returning 200
+End of test downtime of -> 5146.417140960693 ms
+Saving results to DB
+Sleeping for 15 seconds
+--------------------------------------------------------------------------------
+Taking down SYNC app-b-sync and testing its recovery time
+--------------------------------------------------------------------------------
+b'pod "deployment-b-sync-54d76456fb-9h8gs" deleted\n'
+SYNC is returning 500
+SYNC is returning 500
+SYNC is returning 200
+End of test downtime of -> 3827.741861343384 ms
+Saving results to DB
+Sleeping for 15 seconds
+--------------------------------------------------------------------------------
+Taking down SYNC app-g-sync and testing its recovery time
+--------------------------------------------------------------------------------
+b'pod "deployment-g-sync-6745d4fc74-nndvr" deleted\n'
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+Error in request
+SYNC is returning 200
+End of test downtime of -> 3923.3968257904053 ms
+Saving results to DB

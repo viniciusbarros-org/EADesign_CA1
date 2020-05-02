@@ -29,13 +29,6 @@ class Tests:
         self.db=MySQLdb.connect(host=self.DB_HOST,db=self.DB_NAME, user=self.DB_USER,passwd=self.DB_PASS)
         self.db_c = self.db.cursor()
 
-        # self.db_c.execute("""SELECT * from requests""")
-        # data = self.db.store_result() 
-        # print(data.fetch_row(maxrows=100000,how=1))
-        # data = self.db_c.fetchall()
-        # print(data)
-        # exit(1)
-        
 
     def run(self, app:str, number:int=10, async_a_freq=None, async_b_freq=None, async_g_freq=None):
         url = self.URL[app]
@@ -43,9 +36,8 @@ class Tests:
         self.log(f"Running {number} tests for app {app} in {url}")
         self.log('--------------------------------------------------------------------------------')
         for i in range(number):
-            
+
             r = requests.get(url)
-            
             response_time_ms = round(r.elapsed.total_seconds() * 1000)
 
             data = (
@@ -69,7 +61,8 @@ class Tests:
     def save_results(self):
         self.log(f"Saving {len(self.analysis)} results to DB")
         self.db_c.executemany(
-            """INSERT INTO requests (application, status_code, response_time_ms, exec_datetime, async_a_push_freq, async_b_push_freq, async_g_push_freq)
+            # Change table name according to tests being performed.
+            """INSERT INTO requests_ab (application, status_code, response_time_ms, exec_datetime, async_a_push_freq, async_b_push_freq, async_g_push_freq)
             VALUES (%s, %s, %s, %s, %s, %s, %s)""",
             self.analysis 
         )
@@ -85,8 +78,7 @@ class Tests:
 
 def handler(request):
     tests = Tests()
-    tests.run('SYNC', 100)
-    tests.run('ASYNC', 100, 0.05, 0.05, 0.05)
+    tests.run('ASYNC', 50, 2, 2, 0.05)
     
 
     return "<pre>"+json.dumps(tests.get_logs(), indent=2)
