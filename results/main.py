@@ -193,15 +193,19 @@ class Report:
         return f"<img src='data:image/png;base64,{data}'/>"
 
     def get_report3(self):
-        query = """SELECT application, app_down, recovery_time_ms, downtime
+        query = """SELECT application, app_down, 
+                    ROUND(AVG(recovery_time_ms),2) as recovery_time_ms, 
+                    MAX(downtime) as downtime, 
+                    ROUND(AVG(time_to_startup),2) as time_to_startup
                     FROM recovery
-                    ORDER BY application, app_down
-                """
+                    GROUP BY application, app_down
+                    ORDER BY application, app_down"""
         self.db_c.execute(query)
         data = self.db_c.fetchall()
 
         fig = Figure()
         ax = fig.subplots()
+        fig.set_constrained_layout_pads(w_pad=6, h_pad=6)
 
         app = []
         recovery_time = []
@@ -210,10 +214,11 @@ class Report:
         for item in data:
             app.append(item['application']+'-'+item['app_down'])
             recovery_time.append(item['recovery_time_ms'])
-            ax.text(item['recovery_time_ms'] + 1, len(app)-1 + .25, item['recovery_time_ms'])
-            ax.text(50, len(app)-1, "Caused downtime" if item['downtime'] else '',  color='yellow', fontweight='bold')
+            ax.text(item['recovery_time_ms'] + 1, len(app)-1 , item['recovery_time_ms'], color='blue')
+            ax.text(1, len(app)-1 + .25, "start up of " + str(item['time_to_startup']), color='white')
+            ax.text(1, len(app)-1, "Caused downtime" if item['downtime'] else '',  color='yellow', fontweight='bold')
 
-        
+
         y_pos = np.arange(len(app))
 
         ax.barh(y_pos, recovery_time)
@@ -260,6 +265,7 @@ def report1():
     <br/>
     <p>{note}</p>
     <p>{note2}</p>
+    <p>Shown data are average of multiple records collected.</p>
 
     </body>
     </html>
@@ -289,6 +295,7 @@ def report2():
     <h2>Both plots side by side</h2>
     {plot3}
     <p>{note3}</p>
+    <p>Shown data are average of multiple records collected.</p>
 
 
     </body>
@@ -301,7 +308,13 @@ def report3():
     report = Report()
 
     plot = report.get_report3()
-    note = "Apps flagged with the yellow text \"Caused downtime\" were inaccessible while the application was being recovered"
+    note = """Apps flagged with the yellow text "Caused downtime" were 
+    inaccessible while the application was being recovered.
+    <br>
+    The startup time information inside the bars was extracted from kubernetes by checking
+    how long it took since the creation of the pod until it was in ready state.
+    """
+    
 
     return f"""
     <html>
@@ -309,6 +322,7 @@ def report3():
     <h1>Report 3 - Application Recovery times</h1>
     {plot}
     <p>{note}</p>
+    <p>Shown data are average of multiple records collected.</p>
 
     </body>
     </html>

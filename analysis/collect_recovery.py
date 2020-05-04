@@ -7,6 +7,7 @@ import time
 import MySQLdb
 import json
 import subprocess
+import dateutil.parser
 
 class DowntimeTests:
 
@@ -38,12 +39,12 @@ class DowntimeTests:
         self.log(f"Taking down {app} {appLabel} and testing its recovery time")
         self.log('--------------------------------------------------------------------------------')
         
-        command = f"kubectl delete pod -l app={appLabel} --wait=false"
+        command = f"kubectl delete pod -l app={appLabel} --now --wait=false"
         process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
         output, error = process.communicate()
         self.log(output)
-        time.sleep(0.1)
         start_time = time.time()
+        time.sleep(0.1)
 
         back = False
         downtime = False
@@ -67,17 +68,40 @@ class DowntimeTests:
         finish_time = time.time()
         downtime_duration_ms = (finish_time - start_time)*1000
 
+        time_to_startup = self.get_startup_time(appLabel)
+
         self.log(f"End of test downtime of -> {downtime_duration_ms} ms")
 
-        self.save_results(app, appLabel, back, downtime, downtime_duration_ms)
+        self.save_results(app, appLabel, back, downtime, downtime_duration_ms, time_to_startup)
 
-    def save_results(self, app, appLabel, back, downtime, downtime_duration):
+    def get_startup_time(self, appLabel):
+        
+        ready = False
+        while (not ready):
+            command = f"kubectl get pod  -l app={appLabel} --field-selector=status.phase=Running -o json"
+            process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+            output, error = process.communicate()
+            pod = json.loads(output)
+
+            try:
+                start = dateutil.parser.parse(pod['items'][0]['status']['startTime'])
+                finish = dateutil.parser.parse(pod['items'][0]['status']['containerStatuses'][0]['state']['running']['startedAt'])
+                startup_time = finish - start
+                ready = True
+            except Exception as e:
+                self.log("Info from pod not ready yet. Sleeping for 1 sec")
+                time.sleep(1)
+        
+        
+        return(startup_time.seconds * 1000)
+
+    def save_results(self, app, appLabel, back, downtime, downtime_duration, time_to_startup):
         self.log(f"Saving results to DB")
         self.db_c.executemany(
             # Change table name according to tests being performed.
-            """INSERT INTO recovery (application, app_down, downtime, recovery_time_ms)
-            VALUES (%s, %s, %s, %s)""",
-            [(app, appLabel, downtime, downtime_duration)]
+            """INSERT INTO recovery (application, app_down, downtime, recovery_time_ms, time_to_startup)
+            VALUES (%s, %s, %s, %s, %s)""",
+            [(app, appLabel, downtime, downtime_duration, time_to_startup)]
         )
         self.db.commit()
 
@@ -89,7 +113,7 @@ class DowntimeTests:
         return self.logs
 
     def sleep_in_between(self):
-        seconds = 15
+        seconds = 30
         self.log(f"Sleeping for {seconds} seconds")
         time.sleep(seconds)
 
